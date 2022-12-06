@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Bài thi trên hệ thống</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+    .labs{
+        display: inline-block;
+        width: 100px;
+    }
+    </style>
+    <link rel="stylesheet" href="../css/quiz.css">
+</head>
+
+<body>
+
+    <!-- search starts-->
+    <div class="input-group mb-3 mt-3">
+        <input id="SearchBar" type="text" class="form-control" placeholder="Tìm kiếm bài thi" aria-label="Recipient's username" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+            <select class="custom-select" id="CategorySelected">
+                <option selected value="1">Mã bài thi</option>
+                <option value="2">Tên bài thi</option>
+                <option value="3">Phân loại</option>
+                <option value="4">Tìm kiếm</option>
+                <option value="5">Hình ảnh</option>
+              </select>
+          <button id="SearchBtn" class="btn btn-outline-primary ml-1" type="button">Tìm kiếm</button>
+        </div>
+    </div>
+
+    <div class="heading">QUẢN LÝ BÀI THI TRÊN HỆ THỐNG</div>
+
+    <div class="container container-quiz">
+        <!-- search ends -->
+
+        <table class="table table-quiz table-striped">
+            <thead>
+                <th>STT</th>
+                <th>Mã bài thi</th>
+                <th >Tên bài thi</th>
+                <th>Phân loại</th>
+                <th>Tìm kiếm</th>
+                <th >Hình ảnh</th>
+                <th>Hành động</th>
+            </thead>
+            <tbody id="tbody1"></tbody>
+        </table>
+    </div>
+
+<!-- Modal starts-->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Quản lý bài thi</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <label class="labs">Mã bài thi</label> <input id="Idbox" type="text"> <br><br>
+            <label class="labs">Tên bài thi</label> <input id="Namebox" type="text"> <br><br>
+            <label class="labs">Tìm kiếm</label> <input id="Searchbox" type="text"> <br><br> 
+            <label class="labs">Hình ảnh</label> <input id="imageURLbox" type="text"> <br><br>
+            <label class="labs">Phân loại</label>
+            <select id="Categorybox">
+                <option value="basic">Cơ bản</option>
+                <option value="other">Nâng cao</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button id="AddModbtn" type="button" class="add btn btn-primary">Tạo bài thi</button>
+                <button id="UpdModbtn" type="button" class="upd btn btn-success">Sửa bài thi</button>
+                <button id="DelModbtn" type="button" class="del btn btn-danger">Xóa bài thi</button>
+            </div>
+        </div>
+        </div>
+    </div>
+<!-- Modal ends-->
+    
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
+    <script>
+
+        var Idbox = document.getElementById('Idbox');
+        var Namebox = document.getElementById('Namebox');
+        var Categorybox = document.getElementById('Categorybox');
+        var Searchbox = document.getElementById('Searchbox');
+        var imageURLbox = document.getElementById('imageURLbox');
+
+        var BTNmodAdd = document.getElementById('AddModbtn');
+        var BTNmodUpd = document.getElementById('UpdModbtn');
+        var BTNmodDel = document.getElementById('DelModbtn');
+
+        var quizNo = 0;
+
+    </script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+        
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyCp2hPBaQq5Z7aDmZSrB1TwY7pxQNiZSsk",
+            authDomain: "web-thi-thu.firebaseapp.com",
+            databaseURL: "https://web-thi-thu-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "web-thi-thu",
+            storageBucket: "web-thi-thu.appspot.com",
+            messagingSenderId: "1073206614083",
+            appId: "1:1073206614083:web:20cdc5d35e7d38fbf75cf6",
+            measurementId: "G-W2J21MKQ5C"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+
+        import {getFirestore, doc, getDoc, getDocs, setDoc, collection, addDoc, updateDoc, deleteDoc, deleteField}
+        from "https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js";
+        
+
+        const db = getFirestore();
+
+        var quizNo = 0;
+        var tbody1 = document.getElementById('tbody1');
+
+        function AddItemsToTable(quizId,questionTitle,category,search,imageURL){
+            let trow = document.createElement("tr");
+            let td1 = document.createElement('td');
+            let td2 = document.createElement('td');
+            let td3 = document.createElement('td');
+            let td4 = document.createElement('td');
+            let td5 = document.createElement('td');
+            let td6 = document.createElement('td');
+
+            td1.innerHTML= ++quizNo;
+            td2.innerHTML= quizId;
+            td3.innerHTML= questionTitle;
+            td4.innerHTML= category;
+            td5.innerHTML= search;
+            td6.innerHTML= imageURL;
+
+            td2.classList +="quizIdField";
+            td3.classList +="questionTitleField";
+            td4.classList +="categoryField";
+            td5.classList +="searchField";
+            td6.classList +="imageURLField";
+
+            var ControlDiv = document.createElement("td");
+            ControlDiv.classList.add("button-quiz")
+            ControlDiv.innerHTML = '<button type="button" class="edit btn btn-primary my-2 m1-2" data-toggle="modal" data-target="#exampleModalCenter">Sửa bài thi </button>'
+
+
+            var editBtn = document.querySelector(".edit")
+            editBtn?.addEventListener('click', FillTboxes);
+
+            var updBtn = document.querySelector(".upd")
+            updBtn?.addEventListener('click', UpdQuiz);
+
+
+            trow.appendChild(td1); 
+            trow.appendChild(td2); 
+            trow.appendChild(td3); 
+            trow.appendChild(td4);
+            trow.appendChild(td5);
+            trow.appendChild(td6);
+
+            trow.appendChild(ControlDiv);
+            tbody1.appendChild(trow);
+        }
+        
+        function AddAllItemsToTable(quiz){
+            quizNo=0;
+            tbody1.innerHTML="";
+            quiz.forEach(element => {
+                AddItemsToTable(element.quizId,element.questionTitle,element.category,element.search,element.imageURL);
+            });
+        }
+
+        async function GetAllDataOnce(){
+            const querrySnapshot = await getDocs(collection(db, "quizList"));
+            var quiz = [];
+            querrySnapshot.forEach(doc =>{
+                quiz.push(doc.data());
+
+            });
+
+            AddAllItemsToTable(quiz);
+        }
+
+        window.onload = GetAllDataOnce;
+
+        var quiz=[];
+
+        function FillTboxes(index){
+            if(index==null){
+                Idbox.value = "";
+                Namebox.value = "";
+                Categorybox.value = "";
+                Searchbox.value = "";
+                imageURLbox.value = "";
+
+                Idbox.disabled=false;
+
+                BTNmodAdd.style.display='inline-block';
+                BTNmodUpd.style.display='none';
+                BTNmodDel.style.display='none';
+            }
+            
+            else{
+                index--;
+                Idbox.value = quiz[index][0];
+                Namebox.value = quiz[index][1];
+                Categorybox.value = quiz[index][2];
+                Searchbox.value = quiz[index][3];
+                imageURLbox.value = quiz[index][5];
+
+                Idbox.disabled=true;
+
+                BTNmodAdd.style.display='none';
+                BTNmodUpd.style.display='inline-block';
+                BTNmodDel.style.display='inline-block';
+            }
+        }
+ 
+        async function AddQuiz(){
+            var ref = doc(db, "quizList", idbox.value);
+
+            await setDoc(
+                ref,{
+                quizId: idbox.value,
+                questionTitle:  namebox.value,
+                imageURL: imageURLbox.value,
+                search: searchbox.value,
+                category: categorybox.value,
+                questions: [
+                    {
+                        quiz: "",
+                        quizNumber: "",
+                        answers: [],
+                        rightAnswer: ""
+                    }
+                ]
+            })
+            .then(()=>{
+                alert("Lưu dữ liệu thành công");
+                $("#exampleModalCenter").modal('hide');
+            })
+            .catch((error)=>{
+                alert("Không thành công, lỗi"+error);
+            });
+        }
+
+        async function UpdQuiz(){
+            var ref = doc(db, "quizList", idbox.value);
+
+            await updateDoc(
+                ref,{
+                questionTitle:  namebox.value,
+                imageURL: imageURLbox.value,
+                search: searchbox.value,
+                category: categorybox.value
+                }
+            )
+            .then(()=>{
+                alert("Sửa dữ liệu thành công");
+                $("#exampleModalCenter").modal('hide');
+            })
+            .catch((error)=>{
+                alert("Không thành công, lỗi"+error);
+            });
+        }
+
+        async function DelQuiz(){
+            var ref = doc(db, "quizList", idbox.value);
+            const docSnap = await getDoc(ref);
+
+            if(!docSnap.exists()){
+                alert("Không tồn tại dữ liệu");
+                return;
+            }
+            await deleteDoc(ref)
+            .then(()=>{
+                alert("Xoá dữ liệu thành công");
+                $("#exampleModalCenter").modal('hide');
+            })
+            .catch((error)=>{
+                alert("Xóa dữ liệu thất bại, error:"+error);
+            });
+        }
+
+        // tìm kiếm theo...
+        var searchbar = document.getElementById("SearchBar");
+        var searchBtn = document.getElementById("SearchBtn");
+        var category = document.getElementById("CategorySelected");
+        var tbody = document.getElementById("tbody1");
+
+        function SearchTable(Category){
+
+            var filter = searchbar.value.toUpperCase();
+            var tr = tbody.getElementsByTagName("tr");
+            var found;
+
+            for (let i = 0; i <tr.length; i++){
+
+                var td = tr[i].getElementsByClassName(Category);
+
+                for (let j=0; j<td.length; j++){
+
+                    if(td[j].innerHTML.toUpperCase().indexOf(filter) > -1) { //tim duoc ban ghi phu hop tren thanh search
+                        found=true;
+                    }
+                }
+
+                if(found){
+                    tr[i].style.display="";
+                    found=false;
+                }
+                else{
+                    tr[i].style.display="none";
+                }
+            }
+        }
+
+        searchBtn.onclick = function(){
+            if(searchbar.value=="");
+
+            else if(category.value==1)
+            SearchTable("quizIdField");
+
+            else if(category.value==2)
+            SearchTable("questionTitleField");
+
+            else if(category.value==3)
+            SearchTable("categoryField");
+            
+            else if(category.value==4)
+            SearchTable("searchField");
+            
+            else if(category.value==5)
+            SearchTable("imageURLField");
+        }
+        // tim chinh xac 
+        function SearchTableByExactValues(Category){
+
+            var filter = searchbar.value.toUpperCase();
+            var tr = tbody.getElementsByTagName("tr");
+            var found;
+
+            for (let i = 0; i <tr.length;i++){
+
+                var td = tr[i].getElementsByClassName(Category);
+
+                for (let j=0; j<td.length; j++){
+
+                    if(td[j].innerHTML.toUpperCase() == filter) { //tim duoc ban ghi phu hop tren thanh search
+                        found=true;
+                    }
+                }
+
+                if(found){
+                    tr[i].style.display="";
+                    found=false;
+                }
+                else{
+                    tr[i].style.display="none";
+                }
+            }
+        }
+
+        searchBtn.onclick = function(){
+            if(searchbar.value=="");
+
+            else if(category.value==1)
+            SearchTableByExactValues("quizIdField");
+
+            else if(category.value==2)
+            SearchTable("questionTitleField");
+
+            else if(category.value==3)
+            SearchTableByExactValues("categoryField");
+
+            else if(category.value==4)
+            SearchTableByExactValues("searchField");
+
+            else if(category.value==5)
+            SearchTable("imageURLField");
+        }
+
+        searchbar.onkeypress = function(event){
+            if(event.keyCode==13){
+                searchBtn.click();
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

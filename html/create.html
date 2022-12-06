@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo bộ câu hỏi</title>
+    <link rel="stylesheet" href="/css/create.css">
+    <!-- <link rel="stylesheet" href="/css/quiz.css"> -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <div class="container-app">
+        <div class="header">
+            <div class="header-box">
+                <div class="nav">
+                    <button class="back-main"><i class="fas fa-chevron-left"></i></button>
+                    <div class="nav-text">Quay lại</div>
+                </div>
+                <div class="change-status">
+                    <i class="fas fa-check green"></i>
+                    <div class="text"> Tạo bài thi </div>
+                </div>
+                <div class="btn-tray">
+                    <button class="header-tray-btn" id="publishQuiz">Đăng bài</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="editor-body">
+            <div class="questions-header">
+                <div class="question-header-box">
+                    <div class="title">
+                        <h3>Tạo câu hỏi</h3>
+                        <i class="fas fa-info-circle "></i>
+                    </div>
+                    <a href="#modal">
+                        <button class="new-question">
+                            <span>Câu hỏi mới</span>
+                            <i class="fas fa-plus-circle"></i>
+                        </button>
+                    </a>
+                </div>
+            </div>
+            <div class="questions-body">
+                <div class="questions">
+
+                </div>
+            </div>
+            <div class="quiz-info">
+                <div class="quiz-info-wrapper">
+                    <div class="quiz-image">
+                            <div class="icon">
+                            <img id="myimg" src="" alt="" width="100px" height="100px">
+                            </div>
+                            <form>
+                                <div class="form-group">
+                                  <label for="exampleFormControlFile1"></label>
+                                  <input type="file" class="form-control-file" id="exampleFormControlFile1" onchange="chooseFile(this)">
+                                </div>
+                            </form>
+                    </div>
+
+                    <div class="quiz-name">
+                        <div class="name">Câu hỏi</div>
+                        <button><i class="fas fa-pencil-alt"></i></button>
+                    </div>
+                    <div class="quiz-data">
+                        <label>Từ khóa</label> <input id="Searchbox" type="text">  <br>
+                        <label>Phân loại</label>
+                        <select id="Categorybox">
+                            <option value="basic">Cơ bản</option>
+                            <option value="other">Nâng cao</option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thêm câu hỏi -->
+    <div class="modal" id="modal">
+        <div class="modal_overlay"></div>
+        <a href="#" class="overlay"></a>
+        <div class="modal_body">
+            <div class="modal_inner">
+
+                <div class="modal-header">
+                    <div class="modal-title">Câu hỏi 1</div>
+                </div>
+
+                <div class="modal-content">
+                    <div class="modal_question">
+                        <input type="text" id="question" class="form__input" autocomplete="off" placeholder=" ">
+                        <label for="question" class="form__label">Câu hỏi</label>
+                    </div>
+
+                    <div class="modal_answer">
+                        <div class="answer1">
+                            <button class="check-right-answer-button"><i class="fas fa-check "></i></button>
+                            <div class="input-answer">
+                                <input type="text" id="question" class="form__input form-option-input"
+                                    autocomplete="off" placeholder="Lựa chọn đáp án 1">
+
+                            </div>
+                        </div>
+                        <div class="answer1">
+                            <button class="check-right-answer-button"><i class="fas fa-check "></i></button>
+                            <div class="input-answer">
+                                <input type="text" id="question" class="form__input form-option-input"
+                                    autocomplete="off" placeholder="Lựa chọn đáp án 2">
+
+                            </div>
+                        </div>
+
+                        <div class="answer1">
+                            <button class="check-right-answer-button"><i class="fas fa-check "></i></button>
+                            <div class="input-answer">
+                                <input type="text" id="question" class="form__input form-option-input"
+                                    autocomplete="off" placeholder="Lựa chọn đáp án 3">
+
+                            </div>
+                        </div>
+
+                        <div class="answer1">
+                            <button class="check-right-answer-button"><i class="fas fa-check "></i></button>
+                            <div class="input-answer">
+                                <input type="text" id="question" class="form__input form-option-input"
+                                    autocomplete="off" placeholder="Lựa chọn đáp án 4">
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+
+                </div>
+
+                <div class="modal-footer">
+                    <div class="footer-box">
+                        <a href="#"><button class="cancel">Hủy</button></a>
+                        <button class="ad"><i class="fas fa-save"></i> Lưu </button>
+                        <p class="error-notify" style="margin-top: 10px;"></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.9.1/firebase-firestore.js"></script>
+
+<!-- <script>
+    // Your first web app's Firebase configuration: Auth
+    var firebaseConfig = {
+        apiKey: "AIzaSyCp2hPBaQq5Z7aDmZSrB1TwY7pxQNiZSsk",
+        authDomain: "web-thi-thu.firebaseapp.com",
+        projectId: "web-thi-thu",
+        storageBucket: "web-thi-thu.appspot.com",
+        messagingSenderId: "1073206614083",
+        appId: "1:1073206614083:web:20cdc5d35e7d38fbf75cf6",
+        measurementId: "G-W2J21MKQ5C"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    var db = firebase.firestore();
+</script> -->
+
+<!-- Thu vien sweet alert  -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script type="module" src="/js/createQuiz copy.js"></script>
+<script type="module" src="/js/publishQuiz.js"></script>
+<script src="/js/backmain.js"></script>
+<script src="/js/getImagecopy.js"></script>
+
+</html>
